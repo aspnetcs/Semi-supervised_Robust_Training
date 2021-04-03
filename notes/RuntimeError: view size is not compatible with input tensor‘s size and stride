@@ -1,0 +1,23 @@
+RuntimeError: view size is not compatible with input tensor‘s size and stride
+https://blog.csdn.net/tiao_god/article/details/108189879
+RuntimeError: view size is not compatible with input tensor‘s size and stride
+
+Dezeming 2020-08-23 22:30:07  4693  收藏 17
+分类专栏： 出错专栏
+版权
+在运行程序中：
+
+    def forward(self, x):
+        out = self.cnn(x)
+        out = out.view(out.size()[0], -1)
+        return self.fc(out)
+python报错：
+
+RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.
+这是因为view()需要Tensor中的元素地址是连续的，但可能出现Tensor不连续的情况，所以先用 .contiguous() 将其在内存中变成连续分布：
+
+        out = out.contiguous().view(out.size()[0], -1)
+这样就好了。
+————————————————
+版权声明：本文为CSDN博主「Dezeming」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/tiao_god/article/details/108189879
